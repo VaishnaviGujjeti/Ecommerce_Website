@@ -1,0 +1,112 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <!-- Welcome Section -->
+    <div class="text-center mb-5">
+        <h1>Welcome to ShopEasy</h1>
+        <p class="lead">Your one-stop destination for the best deals online!</p>
+    </div>
+
+    <!-- Conditional Signup Prompt or Call to Action -->
+    {% if not user.is_authenticated %}
+    <div class="alert alert-info text-center mb-5" role="alert">
+        New here? <a href="{% url 'signup' %}" class="alert-link">Sign up</a> to unlock exclusive offers!
+    </div>
+    {% else %}
+    <div class="text-center mb-5">
+        <a href="{% url 'products' %}" class="btn btn-primary btn-lg">Explore Products</a>
+    </div>
+    {% endif %}
+
+    <!-- Promotional Banner -->
+    <div class="bg-primary text-white text-center py-4 mb-5 rounded">
+        <h3>Summer Sale!</h3>
+        <p class="lead mb-3">Up to 50% off on selected items. Shop now!</p>
+        <a href="{% url 'products' %}" class="btn btn-light">Shop Now</a>
+    </div>
+
+    <!-- Featured Products Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-4">Featured Products</h2>
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                    <img src="{% static 'images/placeholder-product.jpg' %}" class="card-img-top" alt="{{ product.name }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">₹{{ product.price }}</p>
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p>No featured products available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="mb-5">
+        <h2 class="text-center mb-4">Shop by Category</h2>
+        <div class="row text-center">
+            <!-- Category: Electronics -->
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'products' %}?category=electronics" class="text-decoration-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Electronics</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Category: accessories -->
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'products' %}?category=accessories" class="text-decoration-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Accessories</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Jewelry -->
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'products' %}?category=jewelry" class="text-decoration-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Jewelry</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Footwear -->
+            <div class="col-md-6 mb-4">
+                <a href="{% url 'products' %}?category=footwear" class="text-decoration-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Footwear</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promotional Message -->
+    <div class="card text-center bg-light mb-5">
+        <div class="card-body">
+            <h5 class="card-title">Limited Time Offer!</h5>
+            <p class="card-text">Get 15% off your first order with code: WELCOME15</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

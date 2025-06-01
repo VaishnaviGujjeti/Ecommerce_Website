@@ -1,0 +1,153 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopEasy{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Load Font Awesome for social media icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">ShopEasy</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    
+                    <li class="nav-item">
+
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products' %}">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'cart' %}">
+                            Cart
+                            {% if cart_items_count > 0 %}
+                            ({{ cart_items_count }})
+                            {% endif %}
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'notifications' %}">
+                            Notifications
+                            {% if unread_notifications_count > 0 %}
+                            ({{ unread_notifications_count }})
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'order_history' %}">Order History</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link">Hi, {{ user.username }}!</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer class="bg-dark text-light py-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Navigation Links -->
+                <div class="col-md-3 mb-3">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}" class="text-light text-decoration-none footer-link">Home</a></li>
+                        <li><a href="{% url 'products' %}" class="text-light text-decoration-none footer-link">Products</a></li>
+                        <li><a href="{% url 'cart' %}" class="text-light text-decoration-none footer-link">Cart</a></li>
+                        <li><a href="{% url 'notifications' %}" class="text-light text-decoration-none footer-link">Notifications</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Information -->
+                <div class="col-md-3 mb-3">
+                    <h5>Contact Us</h5>
+
+                    <ul class="list-unstyled">
+                        <li>Email: <a href="mailto:support@shopeasy.com" class="text-light text-decoration-none footer-link">support@shopeasy.com</a></li>
+                        <li>Phone: +91 123-456-7890</li>
+                    </ul>
+                    <!-- Social Media Links -->
+                    <h5 class="mt-3">Follow Us</h5>
+
+                    <div class="social-links mt-2">
+                        <a href="https://twitter.com" target="_blank" class="text-light me-3 footer-link"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="https://instagram.com" target="_blank" class="text-light me-3 footer-link"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="https://facebook.com" target="_blank" class="text-light footer-link"><i class="fab fa-facebook fa-lg"></i></a>
+                    </div>
+                </div>
+                <!-- Newsletter Signup -->
+                <div class="col-md-3 mb-3">
+                    <h5>Newsletter</h5>
+                    <p>Stay updated with our latest offers!</p>
+                    <form>
+                        <div class="input-group input-group-sm">
+                            <input type="email" class="form-control" placeholder="Your email" aria-label="Email for newsletter">
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Copyright and Additional Info -->
+                <div class="col-md-3 text-center text-md-end mb-3">
+                    <h5>ShopEasy</h5>
+                    <p>© {% now "Y" %} ShopEasy. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>

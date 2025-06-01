@@ -1,0 +1,75 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block content %}
+<h1>Products</h1>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">  <!-- Modified row class -->
+    {% for product in page_obj %}
+        <div class="col mb-2">
+            <div class="card h-100">  <!-- Added h-100 class -->
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                {% else %}
+                    <img src="{% static 'images/placeholder.jpg' %}" class="card-img-top product-image" alt="Placeholder">
+                {% endif %}
+                <div class="card-body d-flex flex-column">  <!-- Added flex classes -->
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text flex-grow-1">{{ product.description|truncatechars:100 }}</p>  <!-- Added truncation -->
+                    <div>
+                        <p class="card-text"><strong>${{ product.price }}</strong></p>
+                        <form method="post" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Add to Cart</button>
+        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No products found.</p>
+    {% endfor %}
+</div>
+
+<!-- Pagination remains the same -->
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">« First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<style>
+    /* Add this CSS to your stylesheet */
+    .product-image {
+        height: 250px;  /* Fixed height for images */
+        object-fit: cover;  /* Ensures images maintain aspect ratio */
+        width: 100%;
+    }
+    .card {
+        min-height: 100%;  /* Ensures cards take full height */
+        transition: transform 0.3s ease;  /* Optional: adds hover effect */
+    }
+    .card:hover {
+        transform: translateY(-5px);  /* Optional: adds hover effect */
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}

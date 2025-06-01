@@ -1,0 +1,51 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}Order Confirmation{% endblock %}
+{% block content %}
+<h2>Order Confirmation</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Order #{{ order.id }} - {{ order.created_at }}</h5>
+            <p class="card-text">Total: ${{ order.total_amount }}</p>
+            <p class="card-text">Status: {{ order.status }}</p>
+            <h6>Items ({{ order.order_items.count }}):</h6>
+            {% if order.order_items.exists %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.order_items.all %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>x{{ item.quantity }}</td>
+                                <td>${{ item.price }}</td>
+                                <td>${{ item.price|floatformat:2|multiply:item.quantity }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No items in this order.</p>
+            {% endif %}
+            
+            <h6>Notifications:</h6>
+            {% if latest_notification %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ latest_notification.message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% else %}
+                <p>No new notifications.</p>
+            {% endif %}
+            
+            <a href="{% url 'order_history' %}" class="btn btn-primary">View Order History</a>
+        </div>
+    </div>
+{% endblock %}

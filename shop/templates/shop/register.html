@@ -1,0 +1,14 @@
+{% extends 'shop/base.html' %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block title %}Register{% endblock %}
+{% block content %}
+    <h2>Register</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+    <p>Want a simpler signup? <a href="{% url 'signup' %}">Sign up here</a></p>
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'shop/base.html' %}
+{% block title %}Order History{% endblock %}
+{% block content %}
+    <h2>Order History</h2>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="row">
+        {% for order in page_obj %}
+            <div class="col-md-12 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Order #{{ order.id }} - {{ order.created_at }}</h5>
+                        <p class="card-text">Total: ${{ order.total_amount }}</p>
+                        <p class="card-text">Status: {{ order.status }}</p>
+                        <h6>Items ({{ order.order_items.count }}):</h6>
+                        <ul>
+                            {% for item in order.order_items.all %}
+                                <li>{{ item.product.name }} (x{{ item.quantity }}) - ${{ item.price }}</li>
+                            {% empty %}
+                                <li>No items in this order.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No orders found.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">« First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endblock %}

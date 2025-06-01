@@ -1,0 +1,57 @@
+{% extends 'shop/base.html' %}
+{% load cart_tags %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+    <h2>Your Cart</h2>
+    <!-- {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %} -->
+    {% if cart_items %}
+        <form method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selected_items" value="{{ item.id }}" checked>
+                            </td>
+                            <td>{{ item.product.name }}</td>
+                            <td>
+                                <a href="{% url 'decrease_quantity' item.id %}" class="btn btn-sm btn-outline-secondary">-</a>
+                                {{ item.quantity }}
+                                <a href="{% url 'increase_quantity' item.id %}" class="btn btn-sm btn-outline-secondary">+</a>
+                            </td>
+                            <td>${{ item.product.price }}</td>
+                            <td>${{ item.product.price|floatformat:2|multiply:item.quantity }}</td>
+                            <td>
+                                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p><strong>Total: ${{ total }}</strong></p>
+            <button type="submit" class="btn btn-primary">Checkout Selected Items</button>
+            <a href="{% url 'product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+        </form>
+
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+{% endblock %}
