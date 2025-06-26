@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    padding-bottom: 70px; /* Adjusted to match footer height */
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card-img-top {
+    max-height: 200px;
+    object-fit: cover;
+}
+
+.alert {
+    margin-top: 10px;
+}
+
+/* Ensure content area takes up remaining space */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.container.mt-4 {
+    min-height: calc(100vh - 70px - 56px); /* Subtract footer height and navbar height */
+}
+
+/* Footer Styles */
+footer {
+    border-top: 3px solid #007bff; /* Add a primary color border at the top */
+    /* position: fixed; */
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure footer stays above other content */
+}
+
+.footer-link:hover {
+    color: #007bff !important; /* Bootstrap primary color on hover */
+    transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+footer h5 {
+    font-weight: 600; /* Slightly bolder headings */
+    margin-bottom: 0.75rem; /* Spacing below headings */
+}
+
+footer ul li {
+    margin-bottom: 0.3rem; /* Spacing between list items */
+}
+
+.social-links i {
+    font-size: 1.2rem; /* Smaller icons for social media */
+}
+
+/* Homepage Section Styles */
+.card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.card-text {
+    color: #555;
+}
+
